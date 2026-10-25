@@ -1,0 +1,3 @@
+[submodule "Project"]
+	path = Project
+	url = https://github.com/AKD1729/Crop_Disease_Detection.git

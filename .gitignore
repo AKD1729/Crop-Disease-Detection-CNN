@@ -1,0 +1,38 @@
+# ===== Datasets (too large for GitHub) =====
+Data/
+
+# ===== Model weights (use GitHub Releases or Git LFS) =====
+*.pth
+
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+env/
+
+# ===== Jupyter Notebook =====
+.ipynb_checkpoints/
+
+# ===== Agent/tool configs =====
+.agents/
+
+# ===== OS generated =====
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# ===== IDE =====
+.vscode/
+.idea/
+
+# ===== Root-level duplicate test images (kept in sample/ instead) =====
+/Corn_*.jpg
+/Rice_*.jpg
+/images.jfif
+/PhotoshopExtension_Image.png
+
+# ===== PDFs (binary, optional — remove this line if you want them tracked) =====
+*.pdf
