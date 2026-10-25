@@ -49,7 +49,7 @@ Applied **only to the training split**, after the split is made.
 | Horizontal flip | Yes |
 | Vertical flip | No |
 | Rotation | ±20–25° |
-| Crop/zoom | 80–120% scale (max ~15–20% edge crop) |
+| Crop/zoom | 80–100% crop area scale (`RandomResizedCrop(scale=(0.8, 1.0))`, max ~15–20% edge crop / ~1.12× zoom) |
 | Shear | Excluded |
 | Photometric augmentation | Excluded entirely (geometric only, to avoid disturbing color-based disease signals) |
 | Policy scope | Uniform — identical pipeline for both corn and rice |
@@ -67,8 +67,8 @@ Applied **only to the training split**, after the split is made.
 - Spatial size progression: 224 → 112 → 56 → 28 → 14
 - Global Average Pooling
 - Dropout (0.5), applied once, before the final dense layer only
-- Dense layer → 10 outputs
-- Softmax activation
+- Dense layer → 10 unnormalized logits (PyTorch `CrossEntropyLoss` expects logits during training)
+- Softmax activation applied at inference time (converts raw logits to class probabilities)
 
 **Reasoning basis:** block count chosen by balancing spatial-reduction limits (224×224 input) against pattern complexity of the task (disease texture/pattern recognition needs less depth than large-scale object classification) and overfitting risk relative to dataset size (~770 images/class average). Architecture is a starting point, expected to be adjusted based on real train/validation curve evidence rather than fixed in advance.
 
@@ -158,3 +158,6 @@ All 9 modules fully discussed and locked. Ready to move from planning into execu
 ## Revision Log
 
 - Module 6 training strategy simplified from a two-phase Adam→SGD+Nesterov approach to **Adam-only** (LR 1e-3, reduce-on-plateau decay). All other modules unaffected by this change.
+- Module 4 augmentation scale clarified: `RandomResizedCrop(scale=(0.8, 1.0))` represents crop area ratio (0.8–1.0) achieving ~1.12× zoom and ~15–20% edge crop without out-of-bounds padding.
+- Module 5 architecture clarified: Dense layer returns 10 raw logits for numerical stability with PyTorch `CrossEntropyLoss`; Softmax is applied externally in the inference pipeline.
+- Module 8 deployment strengthened: Out-of-Distribution (OOD) chromatic foliar filter and prediction entropy thresholding added to prevent non-leaf false positives.

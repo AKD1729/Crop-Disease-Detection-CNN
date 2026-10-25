@@ -1,0 +1,53 @@
+flowchart TD
+    subgraph InputStage["1. Input Stage"]
+        IN["Input Image<br/>224 × 224 × 3 RGB"]
+    end
+
+    subgraph Block1["2. Convolutional Block 1"]
+        C1["Conv2d(3 → 32, 3×3, stride 1, pad 1)"] --> BN1["BatchNorm2d(32)"]
+        BN1 --> R1["ReLU"]
+        R1 --> MP1["MaxPool2d(2×2, stride 2)<br/>Output: 112 × 112 × 32"]
+    end
+
+    subgraph Block2["3. Convolutional Block 2"]
+        C2["Conv2d(32 → 64, 3×3, stride 1, pad 1)"] --> BN2["BatchNorm2d(64)"]
+        BN2 --> R2["ReLU"]
+        R2 --> MP2["MaxPool2d(2×2, stride 2)<br/>Output: 56 × 56 × 64"]
+    end
+
+    subgraph Block3["4. Convolutional Block 3"]
+        C3["Conv2d(64 → 128, 3×3, stride 1, pad 1)"] --> BN3["BatchNorm2d(128)"]
+        BN3 --> R3["ReLU"]
+        R3 --> MP3["MaxPool2d(2×2, stride 2)<br/>Output: 28 × 28 × 128"]
+    end
+
+    subgraph Block4["5. Convolutional Block 4"]
+        C4["Conv2d(128 → 256, 3×3, stride 1, pad 1)"] --> BN4["BatchNorm2d(256)"]
+        BN4 --> R4["ReLU"]
+        R4 --> MP4["MaxPool2d(2×2, stride 2)<br/>Output: 14 × 14 × 256"]
+    end
+
+    subgraph ClassifierHead["6. Classification Head"]
+        GAP["AdaptiveAvgPool2d((1, 1))<br/>Output: 1 × 1 × 256"]
+        FLAT["Flatten → 256-d Feature Vector"]
+        DO["Dropout(p=0.5)"]
+        FC["Linear(256 → 10)<br/>Raw Unnormalized Logits"]
+        GAP --> FLAT --> DO --> FC
+    end
+
+    subgraph InferencePipeline["7. Inference Post-Processing & Gate"]
+        SM["Softmax Activation<br/>p = softmax(logits)"]
+        OOD{"OOD / Uncertainty Rejection<br/>• Foliage Ratio ≥ 15%<br/>• Confidence ≥ 60%<br/>• Normalized Entropy ≤ 0.55"}
+        PRED["Accepted Prediction<br/>Top-1 Disease Class & Confidence"]
+        FALLBACK["Uncertainty / Non-Foliar Fallback<br/>Warning / Re-upload Prompt"]
+        FC -.-> SM
+        SM --> OOD
+        OOD -- "Pass" --> PRED
+        OOD -- "Fail" --> FALLBACK
+    end
+
+    IN --> C1
+    MP1 --> C2
+    MP2 --> C3
+    MP3 --> C4
+    MP4 --> GAP

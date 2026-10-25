@@ -124,15 +124,28 @@ python crop_disease_pipeline.py
 ├── .gitmodules                     # Submodule definition for Project/
 ├── requirements.txt                # Python environment dependencies
 ├── README.md                       # Comprehensive documentation
+├── Module_9_Report.md              # Official 7-section coursework technical report
 ├── plan (1).md                     # Project specification & design document
 ├── crop_disease_pipeline.py        # Complete modular training pipeline (Modules 1-7)
 ├── hcl-project.ipynb               # Full experiment notebook with executed outputs
+├── artifacts/
+│   ├── figures/                    # Exported training curves, confusion matrix, and EDA plots
+│   └── diagrams/                   # Architecture and pipeline workflow diagrams (Mermaid)
 ├── Project/                        # Submodule: Streamlit deployment application
 │   ├── app.py                      # Interactive Web UI
-│   ├── crop_disease_scratch_cnn.pth# Trained CNN checkpoint (~1.5 MB)
+│   ├── inference.py                # Multi-tier OOD and uncertainty rejection engine
+│   ├── crop_disease_scratch_cnn.pth# Trained CNN checkpoint (~1.58 MB)
 │   └── normalization_stats.txt     # RGB dataset normalization values
 └── sample/                         # Test images for quick validation
 ```
+
+---
+
+## 📚 Coursework Report & Visual Artifacts
+
+- **Full Coursework Report:** Read [`Module_9_Report.md`](./Module_9_Report.md) for the complete 7-section technical analysis, methodology, and limitations.
+- **Figures:** View exported [training curves, confusion matrix, and EDA distributions](./artifacts/figures/).
+- **Architecture & Workflow Diagrams:** View high-resolution [Mermaid diagrams and specifications](./artifacts/diagrams/README.md).
 
 ---
 
